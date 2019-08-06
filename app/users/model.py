@@ -1,7 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.exc import SQLAlchemyError
 from werkzeug.security import generate_password_hash, check_password_hash
-db = SQLAlchemy()
+
+from app import db
 
 class Users(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -10,12 +11,10 @@ class Users(db.Model):
     password = db.Column(db.String(250))
     login_time = db.Column(db.Integer)
 
-    def __init__(self, id, username, password, email):
-        self.id = id
+    def __init__(self, username, password, email):
         self.username = username
         self.password = password
         self.email = email
-
 
     def __str__(self):
         return "Users(id='%s')" % self.id
@@ -34,6 +33,10 @@ class Users(db.Model):
         return session_commit()
 
     def update(self):
+        return session_commit()
+
+    def delete(self, id):
+        self.query.filter_by(id=id).delete()
         return session_commit()
 
 

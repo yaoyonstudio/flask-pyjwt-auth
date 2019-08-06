@@ -1,10 +1,12 @@
 from flask import Flask, request
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
 
 def create_app(config_filename):
     app = Flask(__name__)
     app.config.from_object(config_filename)
 
-    # send CORS headers
     @app.after_request
     def after_request(response):
         response.headers.add('Access-Control-Allow-Origin', '*')

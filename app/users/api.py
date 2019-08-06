@@ -13,23 +13,14 @@ def init_api(app):
         email = request.form.get('email')
         username = request.form.get('username')
         password = request.form.get('password')
-        # 最后一条记录及其ID
-        lastUserRecord = Users.query.order_by('-id').first()
-        if (lastUserRecord is None):
-            newRecordId = 1
-        else:
-            newRecordId = lastUserRecord.id + 1
-
-        user = Users(id=newRecordId, email=email, username=username, password=Users.set_password(Users, password))
-        Users.add(Users, user)
-
-        userInfo = Users.get(Users, user.id)
-        if userInfo:
+        user = Users(email=email, username=username, password=Users.set_password(Users, password))
+        result = Users.add(Users, user)
+        if user.id:
             returnUser = {
-                'id': userInfo.id,
-                'username': userInfo.username,
-                'email': userInfo.email,
-                'login_time': userInfo.login_time
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,
+                'login_time': user.login_time
             }
             return jsonify(common.trueReturn(returnUser, "用户注册成功"))
         else:
